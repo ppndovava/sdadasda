@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REDE NAVE</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #141414; 
+          color: #35ff03; 
+      }
+      header {
+          background: #33f802;
+          color: #fff;
+          padding: 10px 20px;
+          text-align: center;
+      }
+      h1 {
+          font-size: 24px;
+          margin: 0;
+      }
+      main {
+          padding: 20px;
+          max-width: 600px;
+          margin: auto;
+          background: rgba(0, 0, 0, 0.8); 
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      section {
+          margin-bottom: 20px;
+      }
+      input[type="email"], input[type="password"], input[type="text"], input[type="file"], input[type="url"] {
+          width: 100%;
+          padding: 10px;
+          margin: 10px 0;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          background: #222; 
+          color: #fff; 
+      }
+      button {
+          background: #02fd38;
+          color: white;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: bold;
+          width: 100%; 
+      }
+      button:hover {
+          background: #34e409;
+      }
+      footer {
+          text-align: center;
+          padding: 10px 0;
+          background: #222;
+          color: #657786;
+          position: relative;
+          bottom: 0;
+          width: 100%;
+      }
+      .link {
+          color: #10ec3f;
+          text-decoration: none;
+      }
+      #registerArea, #mainContent, #profileArea, #forgotPasswordArea, #editProfileArea, #searchArea {
+          display: none; 
+      }
+      .post {
+          background: #333;
+          padding: 10px;
+          margin: 10px 0;
+          border-radius: 5px;
+      }
+      .story {
+          display: inline-block;
+          width: 60px;
+          height: 60px;
+          background: #555;
+          border-radius: 50%;
+          margin: 5px;
+      }
+      .follow-button {
+          background: #e1306c;
+          color: rgb(0, 250, 83);
+          border: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: bold;
+      }
+      .online {
+          border: 2px solid #4CAF50; 
+      }
+      .search-result {
+          background: #555;
+          padding: 10px;
+          margin: 10px 0;
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+      .search-result img {
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+      }
+      .profile-status {
+          font-size: 14px;
+          color: #4CAF50; 
+      }
+      .comment-section {
+          margin-top: 10px;
+      }
+      .comment {
+          display: flex;
+          align-items: center;
+          margin-top: 5px;
+      }
+      .comment input {
+          flex: 1;
+          margin-right: 5px;
+      }
+  </style>
+</head>
+<body>
+  <header>
+      <h1>REDE NAVE</h1>
+  </header>
+
+  <main>
+      <section id="authArea">
+          <div id="loginArea">
+              <h2>Entrar</h2>
+              <form id="loginForm">
+                  <input type="text" id="emailOrPhone" name="emailOrPhone" placeholder="Email ou Telefone" required>
+                  <input type="password" id="password" name="password" placeholder="Senha" required>
+                  <button type="submit">Entrar</button>
+              </form>
+              <p><a href="#" class="link" id="showRegister">Novo por aqui? Cadastre-se agora.</a></p>
+              <p><a href="#" class="link" id="showForgotPassword">Esqueceu a senha?</a></p>
+          </div>
+
+          <div id="registerArea">
+              <h2>Cadastrar</h2>
+              <form id="registerForm">
+                  <input type="text" id="newEmailOrPhone" name="newEmailOrPhone" placeholder="Email ou Telefone" required>
+                  <input type="password" id="newPassword" name="newPassword" placeholder="Senha" required>
+                  <input type="text" id="username" name="username" placeholder="Nome de Usuário" required>
+                  <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" required>
+                  <button type="submit">Cadastrar</button>
+              </form>
+              <p><a href="#" class="link" id="showLogin">Já tem uma conta? Faça login.</a></p>
+          </div>
+      </section>
+
+      <section id="forgotPasswordArea">
+          <h2>Esqueci a Senha</h2>
+          <form id="forgotPasswordForm">
+              <input type="text" id="forgotEmailOrPhone" name="forgotEmailOrPhone" placeholder="Email ou Telefone" required>
+              <button type="submit">Enviar Link de Redefinição</button>
+          </form>
+          <p><a href="#" class="link" id="showLoginFromForgot">Voltar ao Login</a></p>
+      </section>
+
+      <section id="profileArea">
+          <h2>Perfil de <span id="profileUsername"></span> <span id="profileStatus" class="profile-status"></span></h2>
+          <img id="profileImage" src="" alt="Foto de Perfil" style="width: 100px; height: 100px; border-radius: 50%;">
+          <p id="bio"></p>
+          <h3>Postagens</h3>
+          <div id="postsContainer"></div>
+          <h3>Fazer uma nova postagem</h3>
+          <form id="postForm">
+              <input type="file" id="postImage" name="postImage" accept="image/*" capture="environment">
+              <input type="text" id="postText" name="postText" placeholder="Escreva algo..." required>
+              <input type="file" id="postVideo" name="postVideo" accept="video/*">
+              <input type="file" id="postAudio" name="postAudio" accept="audio/*">
+              <button type="submit">Postar</button>
+          </form>
+          <h3>Seguindo</h3>
+          <div id="followingContainer"></div>
+          <h3>Stories</h3>
+          <div id="storiesContainer"></div>
+          <p><a href="#" class="link" id="editProfile">Editar Perfil</a></p>
+          <p><a href="#" class="link" id="logout">Sair</a></p>
+      </section>
+
+      <section id="editProfileArea">
+          <h2>Editar Perfil</h2>
+          <form id="editProfileForm">
+              <input type="text" id="editUsername" name="editUsername" placeholder="Nome de Usuário" required>
+              <input type="text" id="editBio" name="editBio" placeholder="Biografia">
+              <input type="file" id="editProfilePhoto" name="editProfilePhoto" accept="image/*">
+              <button type="submit">Salvar Alterações</button>
+          </form>
+          <p><a href="#" class="link" id="cancelEdit">Cancelar</a></p>
+      </section>
+
+      <section id="mainContent">
+          <h2>Bem-vindo a rede nave!</h2>
+          <input type="text" id="searchInput" placeholder="Pesquisar Usuários...">
+          <div id="searchResults"></div>
+          <h3>Feed</h3>
+          <div id="feedContainer"></div>
+      </section>
+
+      <footer>
+          <p>&copy; 2024 rede nave. Todos os direitos reservados.</p>
+      </footer>
+  </main>
+
+  <script>
+      let users = [];
+      let loggedInUser = null;
+
+      document.getElementById('showRegister').addEventListener('click', function() {
+          document.getElementById('loginArea').style.display = 'none';
+          document.getElementById('registerArea').style.display = 'block';
+      });
+
+      document.getElementById('showLogin').addEventListener('click', function() {
+          document.getElementById('registerArea').style.display = 'none';
+          document.getElementById('loginArea').style.display = 'block';
+      });
+
+      document.getElementById('showForgotPassword').addEventListener('click', function() {
+          document.getElementById('loginArea').style.display = 'none';
+          document.getElementById('forgotPasswordArea').style.display = 'block';
+      });
+
+      document.getElementById('showLoginFromForgot').addEventListener('click', function() {
+          document.getElementById('forgotPasswordArea').style.display = 'none';
+          document.getElementById('loginArea').style.display = 'block';
+      });
+
+      document.getElementById('registerForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const emailOrPhone = document.getElementById('newEmailOrPhone').value;
+          const password = document.getElementById('newPassword').value;
+          const username = document.getElementById('username').value;
+          const profilePhoto = document.getElementById('profilePhoto').files[0];
+
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              users.push({ emailOrPhone, password, username, profilePhoto: e.target.result, bio: '', posts: [], following: [], online: false });
+              alert('Usuário cadastrado com sucesso!');
+              document.getElementById('registerArea').style.display = 'none';
+              document.getElementById('loginArea').style.display = 'block';
+          };
+          reader.readAsDataURL(profilePhoto);
+      });
+
+      document.getElementById('loginForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const emailOrPhone = document.getElementById('emailOrPhone').value;
+          const password = document.getElementById('password').value;
+
+          const user = users.find(u => (u.emailOrPhone === emailOrPhone) && u.password === password);
+          if (user) {
+              loggedInUser = user;
+              user.online = true; 
+              document.getElementById('authArea').style.display = 'none';
+              document.getElementById('mainContent').style.display = 'block';
+              document.getElementById('profileArea').style.display = 'block';
+              document.getElementById('profileUsername').innerText = user.username;
+              document.getElementById('profileImage').src = user.profilePhoto;
+              document.getElementById('bio').innerText = user.bio || 'Sem biografia.';
+              document.getElementById('profileStatus').innerText = user.online ? 'Online' : 'Offline';
+              displayPosts();
+              displayFollowing();
+              displayStories();
+              displaySearchResults(); 
+          } else {
+              alert('Usuário ou senha incorretos.');
+          }
+      });
+
+      document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const emailOrPhone = document.getElementById('forgotEmailOrPhone').value;
+          const user = users.find(u => u.emailOrPhone === emailOrPhone);
+          if (user) {
+              alert('Link de redefinição de senha enviado para ' + emailOrPhone);
+          } else {
+              alert('Usuário não encontrado.');
+          }
+      });
+
+      document.getElementById('postForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const postImage = document.getElementById('postImage').files[0];
+          const postVideo = document.getElementById('postVideo').files[0];
+          const postAudio = document.getElementById('postAudio').files[0];
+          const postText = document.getElementById('postText').value;
+
+          const post = {
+              image: null,
+              video: null,
+              audio: null,
+              text: postText,
+              likes: 0,
+              comments: []
+          };
+
+          const readers = [];
+          if (postImage) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  post.image = e.target.result;
+                  addPost(post);
+              };
+              readers.push(reader.readAsDataURL(postImage));
+          }
+          if (postVideo) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  post.video = e.target.result;
+                  addPost(post);
+              };
+              readers.push(reader.readAsDataURL(postVideo));
+          }
+          if (postAudio) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  post.audio = e.target.result;
+                  addPost(post);
+              };
+              readers.push(reader.readAsDataURL(postAudio));
+          }
+
+          if (readers.length === 0) {
+              addPost(post);
+          }
+      });
+
+      function addPost(post) {
+          loggedInUser.posts.push(post);
+          displayPosts();
+      }
+
+      function displayPosts() {
+          const postsContainer = document.getElementById('postsContainer');
+          postsContainer.innerHTML = '';
+          loggedInUser.posts.forEach((post, index) => {
+              const postDiv = document.createElement('div');
+              postDiv.className = 'post';
+              postDiv.innerHTML = `
+                  ${post.image ? `<img src="${post.image}" alt="Post" style="width: 100%;">` : ''}
+                  ${post.video ? `<video controls style="width: 100%;"><source src="${post.video}" type="video/mp4">Seu navegador não suporta o vídeo.</video>` : ''}
+                  ${post.audio ? `<audio controls style="width: 100%;"><source src="${post.audio}" type="audio/mpeg">Seu navegador não suporta o áudio.</audio>` : ''}
+                  <p>${post.text}</p>
+                  <button onclick="likePost(${index})">Curtir (${post.likes})</button>
+                  <div class="comment-section">
+                      <input type="text" placeholder="Adicionar um comentário..." id="commentInput${index}">
+                      <button onclick="addComment(${index})">Comentar</button>
+                  </div>
+                  <div id="comments${index}"></div>
+              `;
+              postsContainer.appendChild(postDiv);
+          });
+      }
+
+      function likePost(index) {
+          loggedInUser.posts[index].likes++;
+          displayPosts();
+      }
+
+      function addComment(index) {
+          const commentInput = document.getElementById(`commentInput${index}`);
+          const commentText = commentInput.value;
+          if (commentText) {
+              loggedInUser.posts[index].comments.push(commentText);
+              commentInput.value = '';
+              displayComments(index);
+          }
+      }
+
+      function displayComments(index) {
+          const commentsContainer = document.getElementById(`comments${index}`);
+          commentsContainer.innerHTML = '';
+          loggedInUser.posts[index].comments.forEach(comment => {
+              const commentDiv = document.createElement('div');
+              commentDiv.className = 'comment';
+              commentDiv.innerText = comment;
+              commentsContainer.appendChild(commentDiv);
+          });
+      }
+
+      function displayFollowing() {
+          const followingContainer = document.getElementById('followingContainer');
+          followingContainer.innerHTML = '';
+          loggedInUser.following.forEach(followedUser => {
+              const followedDiv = document.createElement('div');
+              followedDiv.innerText = followedUser.username;
+              if (followedUser.online) {
+                  followedDiv.classList.add('online');
+              }
+              followingContainer.appendChild(followedDiv);
+          });
+      }
+
+      function displayStories() {
+          const storiesContainer = document.getElementById('storiesContainer');
+          storiesContainer.innerHTML = '';
+          
+          const storyDiv = document.createElement('div');
+          storyDiv.className = 'story';
+          storiesContainer.appendChild(storyDiv);
+      }
+
+      function displaySearchResults() {
+          const searchResults = document.getElementById('searchResults');
+          searchResults.innerHTML = '';
+          users.forEach(user => {
+              if (user !== loggedInUser) { 
+                  const resultDiv = document.createElement('div');
+                  resultDiv.className = 'search-result';
+                  resultDiv.innerHTML = `
+                      <img src="${user.profilePhoto}" alt="Foto de Perfil">
+                      <div>
+                          <p>${user.username}</p>
+                          <button class="follow-button" onclick="followUser('${user.username}')">Seguir</button>
+                      </div>
+                  `;
+                  searchResults.appendChild(resultDiv);
+              }
+          });
+      }
+
+      document.getElementById('searchInput').addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase();
+          const searchResults = document.getElementById('searchResults');
+          searchResults.innerHTML = '';
+          users.forEach(user => {
+              if (user.username.toLowerCase().includes(searchTerm) && user !== loggedInUser) {
+                  const resultDiv = document.createElement('div');
+                  resultDiv.className = 'search-result';
+                  resultDiv.innerHTML = `
+                      <img src="${user.profilePhoto}" alt="Foto de Perfil">
+                      <div>
+                          <p>${user.username}</p>
+                          <button class="follow-button" onclick="followUser('${user.username}')">Seguir</button>
+                      </div>
+                  `;
+                  searchResults.appendChild(resultDiv);
+              }
+          });
+      });
+
+      document.getElementById('editProfile').addEventListener('click', function() {
+          document.getElementById('profileArea').style.display
+          = 'none';
+          document.getElementById('editProfileArea').style.display = 'block';
+          document.getElementById('editUsername').value = loggedInUser.username;
+          document.getElementById('editBio').value = loggedInUser.bio;
+      });
+
+      document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const username = document.getElementById('editUsername').value;
+          const bio = document.getElementById('editBio').value;
+          const profilePhoto = document.getElementById('editProfilePhoto').files[0];
+
+          if (profilePhoto) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  loggedInUser.username = username;
+                  loggedInUser.bio = bio;
+                  loggedInUser.profilePhoto = e.target.result;
+                  updateProfile();
+              };
+              reader.readAsDataURL(profilePhoto);
+          } else {
+              loggedInUser.username = username;
+              loggedInUser.bio = bio;
+              updateProfile();
+          }
+      });
+
+      function updateProfile() {
+          document.getElementById('profileUsername').innerText = loggedInUser.username;
+          document.getElementById('profileImage').src = loggedInUser.profilePhoto;
+          document.getElementById('bio').innerText = loggedInUser.bio || 'Sem biografia.';
+          document.getElementById('profileStatus').innerText = loggedInUser.online ? 'Online' : 'Offline';
+          document.getElementById('editProfileArea').style.display = 'none';
+          document.getElementById('profileArea').style.display = 'block';
+      }
+
+      document.getElementById('logout').addEventListener('click', function() {
+          loggedInUser.online = false; 
+          loggedInUser = null;
+          document.getElementById('profileArea').style.display = 'none';
+          document.getElementById('mainContent').style.display = 'block';
+          document.getElementById('authArea').style.display = 'block';
+      });
+
+      function followUser(username) {
+          const userToFollow = users.find(u => u.username === username);
+          if (userToFollow && !loggedInUser.following.includes(userToFollow)) {
+              loggedInUser.following.push(userToFollow);
+              alert(`Você seguiu ${username}!`);
+              displayFollowing();
+          } else {
+              alert(`Você já está seguindo ${username} ou o usuário não existe.`);
+          }
+      }
+  </script>
+</body>
+</html>
